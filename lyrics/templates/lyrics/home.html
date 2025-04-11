@@ -1,11 +1,29 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>歌词网站首页</title>
+    <title>歌词搜索首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 引入字体和样式 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'lyrics/style.css' %}">
 </head>
 <body>
-    <h1>欢迎来到歌词网站！</h1>
-    <p>你可以在这里查看和搜索你喜欢的歌曲与歌词。</p>
+    <div class="container">
+        <h1>歌词搜索</h1>
+
+        <!-- 搜索框 -->
+        <form action="#" method="get">
+            <input type="text" placeholder="输入歌词或歌曲名称..." name="query" />
+        </form>
+
+        <!-- 两个按钮 -->
+        <div class="button-group">
+            <button class="btn">查看搜索记录</button>
+            <button class="btn">查看用户信息</button>
+        </div>
+    </div>
 </body>
 </html>
