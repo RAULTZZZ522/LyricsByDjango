@@ -3,10 +3,9 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>歌词搜索首页</title>
+    <title>歌词搜索</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- 引入字体和样式 -->
+    <!-- 字体和CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'lyrics/style.css' %}">
 </head>
@@ -14,12 +13,13 @@
     <div class="container">
         <h1>歌词搜索</h1>
 
-        <!-- 搜索框 -->
-        <form action="#" method="get">
+        <!-- 搜索表单 -->
+        <form action="#" method="get" class="search-form">
             <input type="text" placeholder="输入歌词或歌曲名称..." name="query" />
+            <button type="submit" class="search-btn">搜索</button>
         </form>
 
-        <!-- 两个按钮 -->
+        <!-- 操作按钮 -->
         <div class="button-group">
             <button class="btn">查看搜索记录</button>
             <button class="btn">查看用户信息</button>
