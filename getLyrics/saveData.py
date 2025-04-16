@@ -5,7 +5,7 @@ DB_CONFIG = {
     "host": "localhost",
     "port": 3306,
     "user": "root",
-    "password": "chen103601 `",
+    "password": "chen103601",
     "database": "lyrics_db",
     "charset": "utf8mb4"
 }
@@ -19,7 +19,7 @@ def insert_lyrics_to_mysql(data_path="./getLyrics/data"):
         if not os.path.isdir(artist_folder):
             continue
 
-        # 插入 artist（若不存在）
+        # 查询歌手是否存在
         cursor.execute("SELECT id FROM lyrics_artist WHERE name = %s", (artist_name,))
         artist = cursor.fetchone()
         if artist:
@@ -27,7 +27,7 @@ def insert_lyrics_to_mysql(data_path="./getLyrics/data"):
         else:
             cursor.execute("INSERT INTO lyrics_artist (name) VALUES (%s)", (artist_name,))
             artist_id = cursor.lastrowid
-            print(f"✅ 插入歌手：{artist_name}（id={artist_id}）")
+            print(f"插入歌手：{artist_name}（id={artist_id}）")
 
         for filename in os.listdir(artist_folder):
             if not filename.endswith(".txt"):
@@ -35,6 +35,17 @@ def insert_lyrics_to_mysql(data_path="./getLyrics/data"):
 
             song_title = os.path.splitext(filename)[0]
             file_path = os.path.join(artist_folder, filename)
+
+            # 查询该歌手下是否已存在该歌曲
+            cursor.execute("""
+                SELECT s.id FROM lyrics_song s
+                JOIN lyrics_artist a ON s.artist_id = a.id
+                WHERE s.title = %s AND a.name = %s
+            """, (song_title, artist_name))
+            existing_song = cursor.fetchone()
+            if existing_song:
+                print(f"已存在：{artist_name} - {song_title}，跳过重复插入。")
+                continue
 
             # 读取歌词内容
             with open(file_path, "r", encoding="utf-8") as f:
@@ -46,18 +57,18 @@ def insert_lyrics_to_mysql(data_path="./getLyrics/data"):
                 VALUES (%s, %s, %s, %s, %s)
             """, (song_title, None, None, None, artist_id))
             song_id = cursor.lastrowid
-            print(f"🎵 插入歌曲：{song_title}（id={song_id}）")
+            print(f"插入歌曲：{song_title}（id={song_id}）")
 
             # 插入 lyric
             cursor.execute("""
                 INSERT INTO lyrics_lyric (content, song_id)
                 VALUES (%s, %s)
             """, (lyric_text, song_id))
-            print(f"📝 插入歌词：{artist_name} - {song_title}")
+            print(f"插入歌词：{artist_name} - {song_title}")
 
     conn.commit()
     conn.close()
-    print("🎉 所有歌词成功写入数据库！")
+    print("所有歌词成功写入数据库")
 
 if __name__ == "__main__":
     insert_lyrics_to_mysql()
