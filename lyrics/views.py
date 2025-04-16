@@ -1,9 +1,22 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Song
+from django.db.models import Q
 
 # 首页视图函数
 def home(request):
-    return render(request, 'lyrics/home.html')
+    query = request.GET.get('query', '')
+    songs = []
+    if query:
+        # 只搜索歌曲标题和歌手姓名，不搜索歌词内容或ID
+        songs = Song.objects.filter(
+            Q(title__icontains=query) | Q(artist__name__icontains=query)
+        )
+    context = {
+        'songs': songs,
+        'query': query
+    }
+    return render(request, 'lyrics/home.html', context)
+
 
 # 歌曲详情视图
 def song_detail(request, artist_name, song_id):

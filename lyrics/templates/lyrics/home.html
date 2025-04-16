@@ -3,9 +3,8 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>歌词搜索</title>
+    <title>歌词搜索首页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 字体和CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'lyrics/style.css' %}">
 </head>
@@ -13,17 +12,33 @@
     <div class="container">
         <h1>歌词搜索</h1>
 
-        <!-- 搜索表单 -->
-        <form action="#" method="get" class="search-form">
-            <input type="text" placeholder="输入歌词或歌曲名称..." name="query" />
+        <form action="" method="get" class="search-form">
+            <input type="text" placeholder="输入歌词或歌曲名称..." name="query" value="{{ query }}" class="search-input" />
             <button type="submit" class="search-btn">搜索</button>
         </form>
 
-        <!-- 操作按钮 -->
         <div class="button-group">
             <button class="btn">查看搜索记录</button>
             <button class="btn">查看用户信息</button>
         </div>
-    </div>
+
+        <!-- 搜索结果展示区域 -->
+        <div class="search-results">
+            {% if songs %}
+                <h3>搜索结果 ({{ songs.count }})：</h3>
+                <ul>
+                    {% for song in songs %}
+                        <li>
+                            <a href="{% url 'song_detail' artist_name=song.artist.name song_id=song.id %}">
+                                {{ song.title }} - {{ song.artist.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% elif query %}
+                <p class="no-results">未找到与“{{ query }}”相关的歌曲，请尝试其他关键词。</p>
+            {% endif %}
+</div>
+
 </body>
 </html>
