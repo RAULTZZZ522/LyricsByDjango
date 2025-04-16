@@ -4,6 +4,7 @@ import re
 import os
 import time
 import sys
+import json
 import io
 from getId import get_song_ids  # 你已有的函数
 
@@ -64,44 +65,41 @@ def get_lyrics(song_name, song_id, save_folder):
         # 保存文件
         with open(filename, "w", encoding="utf-8") as f:
             f.write(lyric)
-        print(f"✅ 已保存: {filename}")
+        print(f"已保存: {filename}")
     except Exception as e:
-        print(f"❌ 获取失败：{song_name}（ID: {song_id}） 错误信息：{e}")
+        print(f"获取失败：{song_name}（ID: {song_id}） 错误信息：{e}")
+
+def load_song_list(json_path):
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return data
 
 # 主函数
+import os
+import json
+import time
+
+# 从 json 文件中读取所有歌手及歌曲名
+def load_song_list(json_path):
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    return data  # 返回字典，key是歌手名，value是歌曲名列表
+
 if __name__ == '__main__':
-    singer_name = "许巍"
-    song_list = [
-    "蓝莲花",
-    "曾经的你",
-    "故乡",
-    "旅行",
-    "时光",
-    "像风一样自由",
-    "星空",
-    "家",
-    "完美生活",
-    "天堂",
-    "礼物",
-    "故事",
-    "温暖",
-    "难忘的一天",
-    "每一刻都是崭新的",
-    "远航",
-    "爱如少年",
-    "悠远的天空",
-    "方向",
-    "风和日丽"
-]
+    # 指定 JSON 文件路径
+    json_path = os.path.join("getLyrics", "data", "华语歌手.json")
+    all_singer_songs = load_song_list(json_path)
+    if all_singer_songs:
+        print('成功获取数据')
+    for singer_name, song_list in all_singer_songs.items():
+        print(f"\n当前处理歌手：{singer_name}，歌曲数量：{len(song_list)}")
 
-
-    # 获取歌曲名-歌曲ID字典
-    song_dict = get_song_ids(song_list)
-
-    # 创建文件夹并逐首获取歌词
-    for name, sid in song_dict.items():
-        if sid is not None:
-            get_lyrics(song_name=name, song_id=sid, save_folder=singer_name)
-            time.sleep(1)  # 防止请求太快被封
-        else:
-            print(f"⚠️ 未找到歌曲：{name}")
+        # 获取当前歌手所有歌曲的 ID
+        song_dict = get_song_ids(song_list)
+        # 依次获取歌词
+        for name, sid in song_dict.items():
+            if sid is not None:
+                get_lyrics(song_name=name, song_id=sid, save_folder=singer_name)
+                time.sleep(1)  # 防止请求太快被封
+            else:
+                print(f"未找到歌曲：{name}")

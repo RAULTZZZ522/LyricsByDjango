@@ -11,7 +11,7 @@ def get_song_ids(song_names, delay=0.5):
     result_dict = {}
 
     for idx, name in enumerate(song_names, start=1):
-        print(f"🔍 正在获取第 {idx}/{len(song_names)} 首歌的ID：{name} ...")
+        print(f"正在获取第 {idx}/{len(song_names)} 首歌的ID：{name} ...")
 
         data = {
             "s": name,
@@ -32,7 +32,7 @@ def get_song_ids(song_names, delay=0.5):
             else:
                 result_dict[name] = None
         except Exception as e:
-            print(f"❌ 获取『{name}』失败：{e}\n")
+            print(f"获取『{name}』失败：{e}\n")
             result_dict[name] = None
 
         time.sleep(delay)
