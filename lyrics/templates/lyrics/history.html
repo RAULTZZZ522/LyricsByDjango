@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索记录</title>
+    <link rel="stylesheet" href="{% static 'lyrics/style.css' %}">
+    <style>
+        /* 优化链接展示样式 */
+        .song-link {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background-color: #f0f4ff;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        .song-link:hover {
+            background-color: #dbe9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>搜索记录中匹配的歌曲</h1>
+
+        {% if songs %}
+            <ul style="text-align: left;">
+                {% for song in songs %}
+                    <li>
+                        <a href="{% url 'song_detail' artist_name=song.artist.name song_id=song.id %}" class="song-link">
+                            {{ song.title }} - {{ song.artist.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>暂无匹配的歌曲记录。</p>
+        {% endif %}
+
+        <a href="/" class="btn" style="margin-top: 20px; display: inline-block; text-decoration: none;" >返回首页</a>
+    </div>
+</body>
+</html>
